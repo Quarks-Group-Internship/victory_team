@@ -3,6 +3,9 @@ import cors from 'cors';
 import errorHandler from './middleware/errorHandler';
 import logger from './middleware/logger';
 import routes from './routes';
+import { config } from 'dotenv';
+
+config();
 
 const app = express();
 
