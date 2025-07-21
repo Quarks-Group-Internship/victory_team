@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES6",                           // Use modern JavaScript features
-    "module": "CommonJS",                      // Required for Node.js compatibility
+    "module": "node16",                      // Required for Node.js compatibility
+    "moduleResolution": "node16",          // Use Node.js module resolution strategy
     "rootDir": "./src",                        // Your TypeScript source files
     "outDir": "./dist",                        // Compiled JavaScript output
     "esModuleInterop": true,                   // Allows default import syntax for CommonJS modules like Express
