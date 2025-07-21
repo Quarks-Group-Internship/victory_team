@@ -1,15 +1,21 @@
 {
   "compilerOptions": {
-    "target": "ES6", // Use modern JavaScript features
-    "module": "node16", // Required for Node.js compatibility
-    "moduleResolution": "node16", // Use Node.js module resolution strategy
-    "rootDir": "./src", // Your TypeScript source files
-    "outDir": "./dist", // Compiled JavaScript output
-    "esModuleInterop": true, // Allows default import syntax for CommonJS modules like Express
-    "strict": true, // Enables strict type-checking
-    "forceConsistentCasingInFileNames": true, // Avoid case mismatch issues
-    "skipLibCheck": true // Speeds up build by skipping type checking for dependencies
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": ["ES2020"],
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "typeRoots": ["./node_modules/@types"]
   },
-  "include": ["src"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*", "src/server.ts"],
+  "exclude": ["node_modules", "dist"]
 }
