@@ -7,24 +7,24 @@ export interface UserAttributes {
   phone: string;
   email: string;
   password: string;
-  role?: "admin" | "user";
+
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-module.exports = (sequelize: Sequelize) => {
-  class User extends Model<UserAttributes> implements UserAttributes {
-    public id!: string;
-    public firstname!: string;
-    public lastname!: string;
-    public phone!: string;
-    public email!: string;
-    public password!: string;
-    public role!: "admin" | "user";
-    public readonly createdAt!: Date;
-    public readonly updatedAt!: Date;
-  }
+export class User extends Model<UserAttributes> implements UserAttributes {
+  public id!: string;
+  public firstname!: string;
+  public lastname!: string;
+  public phone!: string;
+  public email!: string;
+  public password!: string;
 
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+}
+
+export function initUserModel(sequelize: Sequelize) {
   User.init(
     {
       id: {
@@ -43,7 +43,7 @@ module.exports = (sequelize: Sequelize) => {
       phone: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: { len: [10, 15] }, // Assuming phone numbers are between 10 and 15 digits
+        validate: { len: [10, 15] },
       },
       email: {
         type: DataTypes.STRING,
@@ -54,10 +54,6 @@ module.exports = (sequelize: Sequelize) => {
       password: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      role: {
-        type: DataTypes.ENUM("admin", "user"),
-        defaultValue: "user",
       },
       createdAt: {
         type: DataTypes.DATE,
@@ -76,11 +72,10 @@ module.exports = (sequelize: Sequelize) => {
       indexes: [
         {
           unique: true,
-          fields: ["firstname", "lastname", "phone"], // This makes firstname, lastname, and phone unique together per user
+          fields: ["firstname", "lastname", "phone"],
         },
       ],
     },
   );
-
   return User;
-};
+}
