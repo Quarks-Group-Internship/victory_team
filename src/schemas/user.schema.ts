@@ -8,6 +8,8 @@ export const createUserSchema = z.object({
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   role: z.enum(["admin", "user"]).optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
 // Create schema for updating a user
@@ -18,6 +20,8 @@ export const updateUserSchema = z.object({
   email: z.string().email("Invalid email").optional(),
   password: z.string().min(6).optional(),
   role: z.enum(["admin", "user"]).optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
 // Infer TypeScript types from Zod

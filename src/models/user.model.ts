@@ -8,6 +8,8 @@ export interface UserAttributes {
   email: string;
   password: string;
   role?: "admin" | "user";
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 module.exports = (sequelize: Sequelize) => {
@@ -19,6 +21,8 @@ module.exports = (sequelize: Sequelize) => {
     public email!: string;
     public password!: string;
     public role!: "admin" | "user";
+    public readonly createdAt!: Date;
+    public readonly updatedAt!: Date;
   }
 
   User.init(
@@ -54,6 +58,16 @@ module.exports = (sequelize: Sequelize) => {
       role: {
         type: DataTypes.ENUM("admin", "user"),
         defaultValue: "user",
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
       },
     },
     {
