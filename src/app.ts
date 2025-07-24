@@ -1,4 +1,7 @@
-import connectToDatabase from './database/config/database.conf';
+import dbConnection from "./database/config/connection";
 
-
-connectToDatabase();
+dbConnection().then(() => {
+    console.log("[Database] Connected to the database.");
+}).catch((err) => {
+    console.error("[Database] Unable to connect to the database:", err);
+});
