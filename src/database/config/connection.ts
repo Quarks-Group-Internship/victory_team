@@ -4,7 +4,22 @@ import { Sequelize } from 'sequelize';
 
 dotenv.config();
 
-const dsn: string = process.env.DEV_DATABASE_URL || "";
+let dsn: string = "";
+
+switch (process.env.NODE_ENV) {
+  case "development":
+    dsn = process.env.DEV_DATABASE_URL || "";
+    break;
+  case "test":
+    dsn = process.env.TEST_DATABASE_URL || "";
+    break;
+  case "production":
+    dsn = process.env.DATABASE_URL || "";
+    break;
+  default:
+    dsn = process.env.DATABASE_URL || "";
+    break;
+}
 
 if (!dsn) {
   throw new Error("DEV_DATABASE_URL is not defined in your environment variables.");
@@ -12,7 +27,7 @@ if (!dsn) {
 
 const dialectOptions = {
   ssl: {
-    require: true,
+    require: false,
     rejectUnauthorized: false
   }
 };
@@ -21,7 +36,7 @@ export const sequelize: Sequelize = new Sequelize(dsn, {
   dialect: "postgres",
   dialectModule: pg,
   dialectOptions,
-  logging: false,
+  logging: console.log,
   pool: {
     max: 10,
     min: 0,
@@ -30,6 +45,9 @@ export const sequelize: Sequelize = new Sequelize(dsn, {
   }
 });
 
-const dbConnection = async () => await sequelize.authenticate();
+const dbConnection = async () => {
+
+  return await sequelize.authenticate()
+};
 
 export default dbConnection;
