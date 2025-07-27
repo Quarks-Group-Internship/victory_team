@@ -7,6 +7,7 @@ export const createUserSchema = z.object({
   phone: z.string().min(10, "Phone must be at least 10 digits"),
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  role: z.enum(["admin", "stock_manager", "buyer"]).optional(),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
@@ -18,8 +19,7 @@ export const updateUserSchema = z.object({
   phone: z.string().optional(),
   email: z.string().email("Invalid email").optional(),
   password: z.string().min(6).optional(),
-  role: z.enum(["admin", "user"]).optional(),
-  createdAt: z.date().optional(),
+  role: z.enum(["admin", "owner", "buyer"]).optional(),
   updatedAt: z.date().optional(),
 });
 

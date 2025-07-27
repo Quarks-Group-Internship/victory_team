@@ -19,15 +19,17 @@ app.use("/", routes);
 
 app.use(errorHandler);
 
-dbConnection().then(() => {
-  console.log("[Database] Connected to the database.");
+dbConnection()
+  .then(() => {
+    console.log("[Database] Connected to the database.");
 
-  const PORT = process.env.PORT || 5000;
+    const PORT = process.env.PORT || 5000;
 
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((err: Error) => {
+    console.error("[Database] Unable to connect to the database:", err.message);
+    exit(1);
   });
-}).catch((err: Error) => {
-  console.error("[Database] Unable to connect to the database:", err.message);
-  exit(1);
-});

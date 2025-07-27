@@ -1,6 +1,6 @@
-import dotenv from 'dotenv';
-import pg from 'pg';
-import { Sequelize } from 'sequelize';
+import dotenv from "dotenv";
+import pg from "pg";
+import { Sequelize } from "sequelize";
 
 dotenv.config();
 
@@ -22,14 +22,16 @@ switch (process.env.NODE_ENV) {
 }
 
 if (!dsn) {
-  throw new Error("DEV_DATABASE_URL is not defined in your environment variables.");
+  throw new Error(
+    "DEV_DATABASE_URL is not defined in your environment variables.",
+  );
 }
 
 const dialectOptions = {
   ssl: {
     require: false,
-    rejectUnauthorized: false
-  }
+    rejectUnauthorized: false,
+  },
 };
 
 export const sequelize: Sequelize = new Sequelize(dsn, {
@@ -41,13 +43,12 @@ export const sequelize: Sequelize = new Sequelize(dsn, {
     max: 10,
     min: 0,
     acquire: 30000,
-    idle: 10000
-  }
+    idle: 10000,
+  },
 });
 
 const dbConnection = async () => {
-
-  return await sequelize.authenticate()
+  return await sequelize.authenticate();
 };
 
 export default dbConnection;

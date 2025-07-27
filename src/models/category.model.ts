@@ -9,7 +9,10 @@ export interface CategoryAttributes {
   updatedAt?: Date;
 }
 
-export class Category extends Model<CategoryAttributes> implements CategoryAttributes {
+export class Category
+  extends Model<CategoryAttributes>
+  implements CategoryAttributes
+{
   public id!: string;
   public name!: string;
   public description?: string;
@@ -53,8 +56,8 @@ export function initCategoryModel(sequelize: Sequelize) {
     {
       sequelize,
       modelName: "Category",
-      tableName: "categories", 
-    }
+      tableName: "categories",
+    },
   );
   return Category;
 }
