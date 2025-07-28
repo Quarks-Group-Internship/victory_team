@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 "use strict";
 
 module.exports = {
@@ -48,7 +49,7 @@ module.exports = {
     });
   },
 
-  down: async (queryInterface, Sequelize) => {
+  down: async (queryInterface) => {
     await queryInterface.dropTable("products");
   },
 };
