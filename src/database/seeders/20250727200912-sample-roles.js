@@ -1,13 +1,12 @@
 "use strict";
-import { QueryInterface } from "sequelize";
 
-export async function up(queryInterface: QueryInterface) {
+export async function up(queryInterface) {
   await queryInterface.bulkInsert(
     "roles",
     [{ name: "admin" }, { name: "owner" }, { name: "buyer" }],
     {},
   );
 }
-export async function down(queryInterface: QueryInterface) {
+export async function down(queryInterface) {
   await queryInterface.bulkDelete("roles", {}, {});
 }

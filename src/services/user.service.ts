@@ -7,13 +7,18 @@ export const createUser = async (
 ) => {
   return await sequelize.transaction(async (t) => {
     // 1. Create the user
-    const user = await User.create(data, { transaction: t });
+    const { roleName, ...userData } = data;
+
+    const user = await User.create(userData, { transaction: t });
 
     // 2. Find the role
+
     const role = await Role.findOne({
-      where: { name: data.roleName },
+      where: { name: roleName },
       transaction: t,
     });
+
+    console.log("Role: ", role);
     if (!role) {
       throw new Error("Invalid role");
     }
@@ -26,6 +31,7 @@ export const createUser = async (
 };
 
 export const getAllUsers = async () => {
+  console.log("User model:", User);
   return await User.findAll();
 };
 

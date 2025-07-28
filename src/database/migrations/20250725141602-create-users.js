@@ -1,42 +1,42 @@
+/* eslint-disable no-undef */
 // migrations/20250725123456-create-users-table.js
-import { QueryInterface, Sequelize, DataTypes } from "sequelize";
 
-export default {
-  async up(queryInterface: QueryInterface, Sequelize: Sequelize) {
+module.exports = {
+  async up(queryInterface, Sequelize) {
     await queryInterface.createTable("Users", {
       id: {
-        type: DataTypes.UUID,
-        defaultValue: Sequelize.literal("uuid_generate_v4()"),
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
       firstname: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       lastname: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       phone: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       email: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
         unique: true,
       },
       password: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       createdAt: {
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.fn("NOW"),
       },
       updatedAt: {
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.fn("NOW"),
       },
@@ -50,7 +50,7 @@ export default {
     });
   },
 
-  async down(queryInterface: QueryInterface) {
+  async down(queryInterface) {
     await queryInterface.dropTable("Users");
   },
 };

@@ -1,10 +1,11 @@
-import { QueryInterface } from "sequelize";
+import { v4 as uuidv4 } from "uuid";
 
-export async function up(queryInterface: QueryInterface): Promise<void> {
+export async function up(queryInterface) {
   await queryInterface.bulkInsert(
     "Users",
     [
       {
+        id: uuidv4(),
         firstname: "John",
         lastname: "Doe",
         phone: "1234567890",
@@ -18,6 +19,6 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
   );
 }
 
-export async function down(queryInterface: QueryInterface): Promise<void> {
+export async function down(queryInterface) {
   await queryInterface.bulkDelete("Users", {}, {});
 }

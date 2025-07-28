@@ -1,4 +1,5 @@
-import { DataTypes, Model, Sequelize } from "sequelize";
+import { DataTypes, Model } from "sequelize";
+import { sequelize } from "../database/config/connection"; // same instance you use everywhere
 
 export interface RoleAttributes {
   id?: number;
@@ -10,22 +11,23 @@ export class Role extends Model<RoleAttributes> implements RoleAttributes {
   public name!: string;
 }
 
-export function initRoleModel(sequelize: Sequelize) {
-  Role.init(
-    {
-      id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
+Role.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
     },
-    { sequelize, modelName: "Role", tableName: "roles", timestamps: false },
-  );
-
-  return Role;
-}
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+  },
+  {
+    sequelize, // <- attach here directly
+    modelName: "Role",
+    tableName: "roles",
+    timestamps: false,
+  },
+);
