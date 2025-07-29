@@ -6,6 +6,7 @@ import dbConnection from "./database/config/connection";
 import errorHandler from "./middleware/errorHandler";
 import logger from "./middleware/logger";
 import routes from "./routes";
+import "./models/associations";
 
 config();
 

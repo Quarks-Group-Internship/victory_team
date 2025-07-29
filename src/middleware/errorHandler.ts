@@ -14,7 +14,7 @@ const errorHandler = (
   err: AppError,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   // Handle Sequelize Validation errors
   if (err instanceof ValidationError) {

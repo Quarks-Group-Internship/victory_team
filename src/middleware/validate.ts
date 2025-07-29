@@ -1,5 +1,3 @@
-// zod validation middleware for Express.js
-// This middleware validates the request body against a Zod schema.
 import { ZodSchema, ZodError } from "zod";
 import { Request, Response, NextFunction } from "express";
 
@@ -8,17 +6,23 @@ const validate =
   (req: Request, res: Response, next: NextFunction) => {
     try {
       const parsed = schema.parse(req.body);
-      req.body = parsed; // override with validated, typed input
+      req.body = parsed;
       next();
     } catch (error) {
       if (error instanceof ZodError) {
         return res.status(400).json({
           success: false,
           message: "Validation failed",
-          errors: error,
+          errors: (error as ZodError).issues.map((err) => ({
+            path: err.path,
+            message: err.message,
+          })),
         });
       }
-      return res.status(500).json({ message: "Internal Server Error" });
+      return res.status(500).json({
+        success: false,
+        message: "Internal Server Error",
+      });
     }
   };
 
