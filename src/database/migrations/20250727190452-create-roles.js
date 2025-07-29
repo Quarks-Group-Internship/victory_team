@@ -3,7 +3,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("roles", {
+    await queryInterface.createTable("Roles", {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true, // <--- makes it iterative
@@ -14,6 +14,6 @@ module.exports = {
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropTable("roles");
+    await queryInterface.dropTable("Roles");
   },
 };

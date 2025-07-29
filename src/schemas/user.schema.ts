@@ -7,7 +7,7 @@ export const createUserSchema = z.object({
   phone: z.string().min(10, "Phone must be at least 10 digits"),
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  roleName: z.enum(["admin", "owner", "buyer"]).optional(),
+  roleName: z.enum(["admin", "owner", "buyer"]),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });

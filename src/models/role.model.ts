@@ -27,7 +27,7 @@ Role.init(
   {
     sequelize, // <- attach here directly
     modelName: "Role",
-    tableName: "roles",
+    tableName: "Roles",
     timestamps: false,
   },
 );

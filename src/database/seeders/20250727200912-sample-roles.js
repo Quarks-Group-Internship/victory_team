@@ -2,11 +2,11 @@
 
 export async function up(queryInterface) {
   await queryInterface.bulkInsert(
-    "roles",
+    "Roles",
     [{ name: "admin" }, { name: "owner" }, { name: "buyer" }],
     {},
   );
 }
 export async function down(queryInterface) {
-  await queryInterface.bulkDelete("roles", {}, {});
+  await queryInterface.bulkDelete("Roles", {}, {});
 }
