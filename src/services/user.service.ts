@@ -1,6 +1,15 @@
 import { sequelize } from "../database/config/connection";
 import { Role } from "../models/role.model";
 import { User, UserAttributes } from "../models/user.model";
+import { Op, FindAndCountOptions } from "sequelize";
+
+interface GetAllUsersOptions {
+  search?: string;
+  limit?: number;
+  offset?: number;
+  sortBy?: string;
+  sortOrder?: "ASC" | "DESC";
+}
 
 export const createUser = async (
   data: UserAttributes & { roleName: string },
@@ -30,13 +39,45 @@ export const createUser = async (
   });
 };
 
-export const getAllUsers = async () => {
-  console.log("User model:", User);
-  return await User.findAll();
+export const getAllUsers = async (options: GetAllUsersOptions) => {
+  const {
+    search = "",
+    limit,
+    offset,
+    sortBy = "createdAt",
+    sortOrder = "DESC",
+  } = options;
+
+  const whereClause = search
+    ? {
+        [Op.or]: [
+          { firstname: { [Op.iLike]: `%${search}%` } },
+          { lastname: { [Op.iLike]: `%${search}%` } },
+          { email: { [Op.iLike]: `%${search}%` } },
+        ],
+      }
+    : {};
+
+  const queryOptions: FindAndCountOptions = {
+    where: whereClause,
+    order: [[sortBy, sortOrder]],
+  };
+
+  // Only add pagination if limit is provided
+  if (limit !== undefined && limit !== null) {
+    queryOptions.limit = limit;
+    queryOptions.offset = offset || 0;
+  }
+
+  return await User.findAndCountAll(queryOptions);
 };
 
 export const getUserById = async (id: string) => {
   return await User.findByPk(id);
+};
+
+export const getUserByEmail = async (email: string) => {
+  return await User.findOne({ where: { email } });
 };
 
 export const updateUser = async (id: string, data: Partial<UserAttributes>) => {

@@ -20,7 +20,20 @@ export const getAllUsers = async (
   next: NextFunction,
 ) => {
   try {
-    const users = await userService.getAllUsers();
+    const { search, limit, offset, sortBy, sortOrder } = _req.query;
+    const parsedSearch = search ? (search as string) : undefined;
+    const parsedLimit = limit ? parseInt(limit as string, 10) : undefined;
+    const parsedOffset = offset ? parseInt(offset as string, 10) : undefined;
+    const parsedSortBy = sortBy ? (sortBy as string) : "createdAt";
+    const parsedSortOrder = sortOrder ? (sortOrder as "ASC" | "DESC") : "DESC";
+
+    const users = await userService.getAllUsers({
+      search: parsedSearch,
+      limit: parsedLimit,
+      offset: parsedOffset,
+      sortBy: parsedSortBy,
+      sortOrder: parsedSortOrder,
+    });
     res.json(users);
   } catch (err) {
     next(err instanceof Error ? err : new Error("Internal Server Error"));
