@@ -14,7 +14,8 @@
     "migrate-down": "sequelize-cli db:migrate:undo",
     "migrate-down-all": "sequelize-cli db:migrate:undo:all",
     "seed-all": "sequelize db:seed:all",
-    "seed-undo": "sequelize db:seed:undo"
+    "seed-undo": "sequelize db:seed:undo",
+    "seed-undo-all": "sequelize db:seed:undo:all"
   },
   "lint-staged": {
     "**/*.{js,ts,tsx,jsx}": [
