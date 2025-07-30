@@ -1,7 +1,7 @@
 import { Category } from "../models/category.model";
 import { CategoryAttributes } from "../models/category.model";
 import { BadRequestError } from "../middleware/errorHandler";
-import { Op, WhereOptions } from "sequelize";
+import { Op, WhereOptions, OrderItem } from "sequelize";
 
 export const createCategory = async (
   data: Omit<CategoryAttributes, "id" | "createdAt" | "updatedAt">,
@@ -33,10 +33,11 @@ export const getAllCategories = async (options?: {
   search?: string;
   limit?: number;
   offset?: number;
+  sortBy?: string;
+  sortOrder?: string;
 }) => {
   try {
     const whereClause: WhereOptions = {};
-
     if (options?.status) {
       whereClause.status = options.status;
     }
@@ -48,20 +49,33 @@ export const getAllCategories = async (options?: {
       ];
     }
 
+    let orderClause: OrderItem[] = [["createdAt", "DESC"]];
+
+    if (options?.sortBy) {
+      const validSortFields = ["name", "status", "createdAt", "updatedAt"];
+      const sortField = validSortFields.includes(options.sortBy)
+        ? options.sortBy
+        : "createdAt";
+
+      const sortDirection =
+        options?.sortOrder?.toUpperCase() === "ASC" ? "ASC" : "DESC";
+      orderClause = [[sortField, sortDirection]];
+    }
+
     const queryOptions: {
       where: WhereOptions;
-      order: [string, string][];
+      order: OrderItem[];
       limit?: number;
       offset?: number;
     } = {
       where: whereClause,
-      order: [["createdAt", "DESC"]],
+      order: orderClause,
     };
 
-    if (options?.limit) {
-      queryOptions.limit = options.limit;
+    if (options?.limit && options.limit > 0) {
+      queryOptions.limit = Math.min(options.limit, 100);
     }
-    if (options?.offset) {
+    if (options?.offset && options.offset >= 0) {
       queryOptions.offset = options.offset;
     }
 
