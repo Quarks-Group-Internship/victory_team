@@ -21,12 +21,30 @@ export const create = async (
 };
 
 export const getAll = async (
-  _req: Request,
+  req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const categories = await CategoryService.getAllCategories();
+    const { status, search, limit, offset, sortBy, sortOrder } = req.query as {
+      status?: string;
+      search?: string;
+      limit?: string;
+      offset?: string;
+      sortBy?: string;
+      sortOrder?: string;
+    };
+
+    const options = {
+      status,
+      search,
+      limit: limit ? parseInt(limit, 10) : undefined,
+      offset: offset ? parseInt(offset, 10) : undefined,
+      sortBy,
+      sortOrder,
+    };
+
+    const categories = await CategoryService.getAllCategories(options);
     return res.status(200).json({
       success: true,
       data: categories,
@@ -96,13 +114,4 @@ export const remove = async (
   } catch (error: unknown) {
     next(error);
   }
-};
-
-// Async wrapper to catch errors automatically
-export const asyncHandler = (
-  fn: (req: Request, res: Response, next: NextFunction) => Promise<unknown>,
-) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(fn(req, res, next)).catch(next);
-  };
 };

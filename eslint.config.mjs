@@ -19,9 +19,9 @@ export default defineConfig([
     rules: {
       eqeqeq: "error",
       "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars":  [
+      "@typescript-eslint/no-unused-vars": [
         "warn",
-        { "argsIgnorePattern": "^_" }
+        { argsIgnorePattern: "^_" },
       ],
 
       semi: ["error", "always"],
