@@ -1,9 +1,6 @@
 import { Router } from "express";
-<<<<<<< HEAD
 import userRoutes from "./user.routes";
-=======
 import categoryRoutes from "./category.routes";
->>>>>>> e5b5d55 (Add category feature and update related files)
 
 const router = Router();
 
