@@ -7,14 +7,20 @@ import errorHandler from "./middleware/errorHandler";
 import logger from "./middleware/logger";
 import routes from "./routes";
 import "./models/associations";
+import swaggerUi from "swagger-ui-express";
+import swaggerJsdoc from "swagger-jsdoc";
+import { swaggerOptions } from "./swagger/swaggerDef";
 
 config();
 
 const app = express();
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 app.use(cors());
 app.use(logger);
 app.use(express.json());
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/", routes);
 
