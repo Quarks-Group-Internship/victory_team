@@ -10,7 +10,11 @@ export default defineConfig([
     languageOptions: {
       ecmaVersion: 2020,
       sourceType: "module",
-      globals: globals.browser,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+
       parser: tseslint.parser,
     },
     plugins: {
@@ -19,7 +23,11 @@ export default defineConfig([
     rules: {
       eqeqeq: "error",
       "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_" },
+      ],
+
       semi: ["error", "always"],
       quotes: ["error", "double"],
       "no-var": "error",

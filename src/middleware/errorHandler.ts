@@ -1,70 +1,85 @@
 import { Request, Response, NextFunction } from "express";
 import {
-  ValidationError,
+  ValidationError as SequelizeValidationError,
   UniqueConstraintError,
-  ForeignKeyConstraintError,
-  DatabaseError,
 } from "sequelize";
 
-interface AppError extends Error {
+export interface AppError extends Error {
   statusCode?: number;
+  isOperational?: boolean;
+}
+
+export class CustomError extends Error implements AppError {
+  statusCode: number;
+  isOperational: boolean;
+
+  constructor(message: string, statusCode: number, isOperational = true) {
+    super(message);
+    this.statusCode = statusCode;
+    this.isOperational = isOperational;
+    this.name = this.constructor.name;
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
+
+export class NotFoundError extends CustomError {
+  constructor(resource = "Resource") {
+    super(`${resource} not found`, 404);
+  }
+}
+
+export class BadRequestError extends CustomError {
+  constructor(message = "Bad request") {
+    super(message, 400);
+  }
 }
 
 const errorHandler = (
   err: AppError,
   req: Request,
   res: Response,
-  next: NextFunction,
+  _next: NextFunction,
 ) => {
-  // Handle Sequelize Validation errors
-  if (err instanceof ValidationError) {
-    return res.status(400).json({
-      type: err.name,
-      message: "Validation failed",
-      errors: err.errors.map((e) => ({
-        field: e.path,
-        value: e.value,
-        message: e.message,
-      })),
+  let statusCode = err.statusCode || 500;
+  let message = err.message || "Something went wrong";
+
+  if (err instanceof SequelizeValidationError) {
+    statusCode = 400;
+    message = "Validation error";
+    const details = err.errors.map((error) => ({
+      field: error.path,
+      message: error.message,
+    }));
+
+    return res.status(statusCode).json({
+      error: message,
+      details,
     });
   }
 
-  // Handle Sequelize Unique constraint errors
   if (err instanceof UniqueConstraintError) {
-    return res.status(409).json({
-      type: err.name,
-      message: "Unique constraint violation",
-      errors: err.errors.map((e) => ({
-        field: e.path,
-        value: e.value,
-        message: e.message,
-      })),
+    statusCode = 409;
+    message = "Resource already exists";
+    const details = err.errors.map((error) => ({
+      field: error.path,
+      message: `${error.path} must be unique`,
+    }));
+
+    return res.status(statusCode).json({
+      error: message,
+      details,
     });
   }
 
-  // Handle Sequelize Foreign key errors
-  if (err instanceof ForeignKeyConstraintError) {
-    return res.status(409).json({
-      type: err.name,
-      message: "Foreign key constraint failed",
-      index: err.index,
-      fields: err.fields,
-    });
+  // Log error for debugging
+  console.error(`Error ${statusCode}: ${message}`);
+  if (process.env.NODE_ENV !== "production") {
+    console.error(err.stack);
   }
 
-  // Handle general database errors
-  if (err instanceof DatabaseError) {
-    return res.status(500).json({
-      type: err.name,
-      message: err.message,
-    });
-  }
-
-  // ✅ Default fallback for non-Sequelize errors
-  const statusCode = err.statusCode || 500;
-  return res.status(statusCode).json({
-    message: err.message || "Something went wrong",
-    stack: process.env.NODE_ENV === "production" ? undefined : err.stack,
+  res.status(statusCode).json({
+    error: message,
+    ...(process.env.NODE_ENV !== "production" && { stack: err.stack }),
   });
 };
 
