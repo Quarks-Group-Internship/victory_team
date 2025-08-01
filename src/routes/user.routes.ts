@@ -49,6 +49,35 @@ const router = Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Bad request - validation failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 type:
+ *                   type: string
+ *                   example: SequelizeUniqueConstraintError
+ *                 message:
+ *                   type: string
+ *                   example: Validation failed
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: email
+ *                       value:
+ *                         type: string
+ *                         example: user001@example.com
+ *                       message:
+ *                         type: string
+ *                         example: email must be unique
+ *       500:
+ *         description: Internal server error (e.g., database error)
  */
 
 router.post("/", validate(createUserSchema), userController.createUser);
@@ -94,6 +123,19 @@ router.post("/", validate(createUserSchema), userController.createUser);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Internal server error (e.g., database error)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 type:
+ *                   type: string
+ *                   example: SequelizeDatabaseError
+ *                 message:
+ *                   type: string
+ *                   example: string
  */
 
 router.get("/", userController.getAllUsers);
@@ -120,6 +162,27 @@ router.get("/", userController.getAllUsers);
  *               $ref: '#/components/schemas/User'
  *       404:
  *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User not found
+ *       500:
+ *         description: Internal server error (e.g., database error)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 type:
+ *                   type: string
+ *                   example: SequelizeDatabaseError
+ *                 message:
+ *                   type: string
+ *                   example: invalid input syntax for type uuid "cf5efca3-e060-4a97-875f-8fd543af0bf6g"
  *   put:
  *     summary: Update a user by ID
  *     tags: [Users]
@@ -145,8 +208,54 @@ router.get("/", userController.getAllUsers);
  *               $ref: '#/components/schemas/User'
  *       400:
  *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Validation failed
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       path:
+ *                         type: array
+ *                         items:
+ *                           type: string
+ *                           example: firstname
+ *                       message:
+ *                         type: string
+ *                         example: Firstname can't be an empty string or less than 2 characters
+ 
  *       404:
  *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User not found
+ *       500:
+ *         description: Internal server error (e.g., database error)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 type:
+ *                   type: string
+ *                   example: SequelizeDatabaseError
+ *                 message:
+ *                   type: string
+ *                   example: invalid input syntax for type uuid "cf5efca3-e060-4a97-875f-8fd543af0bf6g"
  *   delete:
  *     summary: Delete a user by ID
  *     tags: [Users]
@@ -162,6 +271,27 @@ router.get("/", userController.getAllUsers);
  *         description: User deleted successfully
  *       404:
  *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User not found
+ *       500:
+ *         description: Internal server error (e.g., database error)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 type:
+ *                   type: string
+ *                   example: SequelizeDatabaseError
+ *                 message:
+ *                   type: string
+ *                   example: invalid input syntax for type uuid "cf5efca3-e060-4a97-875f-8fd543af0bf6g"
  */
 
 router.get("/:id", userController.getUserById);
